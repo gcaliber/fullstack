@@ -1,0 +1,14 @@
+#https://www.websequencediagrams.com/
+title Part 0.6 new note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over browser:
+browser sends note data as json
+end note
+
+note over browser:
+browser executes js-code
+that creates a new note
+and then updates the DOM
+end note
