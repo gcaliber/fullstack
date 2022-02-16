@@ -21,7 +21,11 @@ const Content = (props) => {
 }
 
 const Total = (props)=> {
+<<<<<<< HEAD
   const total = props.parts[0].exercises + props.parts[2].exercises + props.parts[2].exercises
+=======
+  const total = props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises
+>>>>>>> 1081400e863bc7b48e6a9d3fa82ce89f178eb4cb
   return (
     <p>Number of exercises {total}</p>
   )
