@@ -8,11 +8,42 @@ const Button = ({handleClick, text}) => (
   </button>
 )
 
-const Statistics = (props) => {
+const StatisticLine = ({text, value, symbol}) => {
   return (
-    <div>{props.text} {props.count}</div>
+    <tr>
+      <td>{text}</td>
+      <td>{value} {symbol}</td>
+    </tr>
   )
 }
+
+const DisplayStats = ({good, neutral, bad}) => {
+  const total = good + neutral + bad
+  if (total > 0) {
+    const average = (total / 3).toFixed(2)
+    const positive = (good / total * 100).toFixed(2)
+    return (
+      <table>
+        <tbody>
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={good + neutral + bad} />
+          <StatisticLine text="average" value={average} />
+          <StatisticLine text="positive" value={positive} symbol="%"/>
+        </tbody>
+      </table>
+    )
+  }
+  else {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
+}
+
 
 const App = () => {
   // save clicks of each button to its own state
@@ -31,12 +62,7 @@ const App = () => {
       <Button handleClick={handleNeutralClick} text="neutral" />
       <Button handleClick={handleBadClick} text="bad" />
       <Header text="statistics" />
-      <Statistics text="good" count={good} />
-      <Statistics text="neutral" count={neutral} />
-      <Statistics text="bad" count={bad} />
-      <Statistics text="all" count={good + neutral + bad} />
-      <Statistics text="average" count={(good + neutral + bad) / 3} />
-      <Statistics text="positive" count={good / (good + neutral + bad)} />
+      <DisplayStats good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
