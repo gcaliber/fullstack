@@ -10,7 +10,12 @@ const CountryList = ({countries, search}) => {
     countries.name.common.toLowerCase()
       .includes(search.toLowerCase()))
 
-  if (list.length > 10) {
+  if (list.length === 0) {
+    return (
+      <div>No matches.</div>
+    )
+  }
+  else if (list.length > 10) {
     return ( 
       <div>Too many matches, make your search more specific.</div>
     )
@@ -27,13 +32,14 @@ const CountryList = ({countries, search}) => {
   return (
     <div key={country.name.official}>
       <h1>{country.name.common}</h1>
-      <p>
-        <div>capital: {country.capital}</div>
-        <div>area: {country.area}</div>
-      </p>
+      capital: {country.capital}
+      <br />
+      area: {country.area}
+      <br />
+      <br />
       <b>languages:</b>
       <ul>
-        {Object.values(country.languages).map(lang => <li>{lang}</li>)}
+        {Object.entries(country.languages).map(lang => <li key={lang[0]}>{lang[1]}</li>)}
       </ul>
       <img src={country.flags.png}></img>
     </div>
