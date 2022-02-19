@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const CountryList = ({countries, search}) => {
+const CountryList = ({countries, search, setSearch}) => {
   if (search === '') {
-    return(<div></div>)
+    return(<div>Search for a country.</div>)
   }
 
   const list = countries.filter(countries => 
     countries.name.common.toLowerCase()
       .includes(search.toLowerCase()))
 
+  const setCountry = (event) => setSearch(event.target.name)
+  
   if (list.length === 0) {
     return (
       <div>No matches.</div>
@@ -23,7 +25,13 @@ const CountryList = ({countries, search}) => {
   else if (list.length > 1) {
     return (
       <div>        
-        {list.map(country => <div key={country.name.official}>{country.name.common}</div>)}
+        {list.map(country => {
+          return (
+            <div key={country.name.official}>
+              {country.name.common} <button onClick={setCountry} name={country.name.common}>show</button>
+            </div>
+          )
+        })}
       </div>
     )
   }
@@ -48,7 +56,7 @@ const CountryList = ({countries, search}) => {
 
 const App = () => {
   const [countries, setCountries] = useState([])
-  const [searchString, setNewSearch] = useState('')
+  const [searchString, setSearch] = useState('')
 
   useEffect(() => {
     axios
@@ -56,14 +64,14 @@ const App = () => {
       .then(response => setCountries(response.data))
   }, [])
 
-  const handleSearchChange = (event) => setNewSearch(event.target.value)
+  const handleSearchChange = (event) => setSearch(event.target.value)
   
   return (
     <div>
       <form>
         find countries <input value={searchString} onChange={handleSearchChange}/>
       </form>
-      <CountryList countries={countries} search={searchString} />
+      <CountryList countries={countries} search={searchString} setSearch={setSearch} />
     </div>
   )
 }
