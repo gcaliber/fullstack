@@ -5,17 +5,19 @@ const Person = ({person}) => (
   </tr>
 )
 
-const Persons = ({persons, filter}) => (
-  <table>
-    <tbody>
-      {persons
-        .filter(person => 
-          person.name.toLowerCase().includes(filter.toLowerCase()))
-        .map((person) => 
-          <Person key={person.id} person={person} />)
-      }
-    </tbody>
-  </table>  
-)
+const Persons = ({persons, filter}) => {
+  return (
+    <table>
+      <tbody>
+        {persons
+          .filter(person => 
+            person.name.toLowerCase().includes(filter.toLowerCase()))
+          .map((person) => 
+            <Person key={person.id} person={person} />)
+        }
+      </tbody>
+    </table>
+  )
+}
 
 export default Persons
