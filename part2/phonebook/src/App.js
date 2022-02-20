@@ -19,13 +19,18 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     if (persons.some(e => e.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+      alert(`${newName} is already in the phonebook`)
     }
     else {
-      setPersons(persons.concat({ name: newName, number: newNumber }))
+      const person = { name: newName, number: newNumber }
+      axios
+        .post('http://localhost:3001/persons', person)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+      })
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   const handleFilterChange = (event) => setNewFilter(event.target.value)
