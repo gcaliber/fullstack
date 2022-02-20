@@ -12,7 +12,7 @@ const Persons = ({persons, filter}) => (
         .filter(person => 
           person.name.toLowerCase().includes(filter.toLowerCase()))
         .map((person) => 
-          <Person key={person.name} person={person} />)
+          <Person key={person.id} person={person} />)
       }
     </tbody>
   </table>  

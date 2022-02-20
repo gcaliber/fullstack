@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import CountryList from './components/CountryList'
 
 const api_key = process.env.REACT_APP_API_KEY
 
@@ -19,6 +18,7 @@ const Weather = ({country}) => {
   if (Object.keys(weather).length === 0) {
     return (
     <div>
+      <h1>Weather in {country.capital}</h1>
       Retrieving weather for {country.capital}...
     </div>)
   }
@@ -27,34 +27,12 @@ const Weather = ({country}) => {
     return (
       <div>
         <h1>Weather in {country.capital}</h1>
-        <img src={`http://openweathermap.org/img/wn/${info.icon}@2x.png`} alt={info.description}></img><br />
         temperature: {weather.main.temp}° Celcius<br />
+        <img src={`http://openweathermap.org/img/wn/${info.icon}@2x.png`} alt={info.description}></img><br />
         wind: {weather.wind.speed} m/s
       </div>
     )
   }
 }
 
-const App = () => {
-  const [countries, setCountries] = useState([])
-  const [searchString, setSearch] = useState('')
-
-  useEffect(() => {
-    axios
-      .get('https://restcountries.com/v3.1/all')
-      .then(response => setCountries(response.data))
-  }, [])
-
-  const handleSearchChange = (event) => setSearch(event.target.value)
-  
-  return (
-    <div>
-      <form>
-        find countries <input value={searchString} onChange={handleSearchChange}/>
-      </form>
-      <CountryList countries={countries} search={searchString} setSearch={setSearch} />
-    </div>
-  )
-}
-
-export default App;
+export default Weather
