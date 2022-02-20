@@ -15,12 +15,20 @@ const App = () => {
     bookService
       .getAll()
       .then(initialPersons => setPersons(initialPersons))
-  }, [])
+  }, [persons])
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.some(e => e.name === newName)) {
-      alert(`${newName} is already in the phonebook`)
+    const person = persons.find(e => e.name === newName)
+    const changedPerson = {...person, number: newNumber}
+      if (person) {
+        if (window.confirm(`${newName} already exists. Update phone number to ${newNumber}?`)) {
+          bookService
+            .update(person.id, changedPerson)
+            .then(returnedPerson => {
+              setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+            })
+        }
     }
     else {
       const personObject = { name: newName, number: newNumber }
@@ -31,6 +39,18 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+    }
+  }
+
+  const deletePerson = (event) => {
+    const id = event.target.id
+    const name = persons.find(p => p.id == id).name
+    if (window.confirm(`Delete ${name}?`)) {
+      bookService
+      .remove(id)
+      .then(() => 
+        setPersons(persons.filter(p => p.id !== id))
+      )
     }
   }
 
@@ -51,7 +71,7 @@ const App = () => {
         numberHandle={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filterName} />
+      <Persons persons={persons} filter={filterName} handleDelete={deletePerson} />
     </div>
   )
 }
