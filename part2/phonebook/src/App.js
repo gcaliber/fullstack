@@ -1,21 +1,36 @@
+import './App.css'
+
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import bookService from './services/phonebook'
+
+const Notification = ({notification}) => {
+  if (notification === null) {
+    return null
+  }
+
+  const {message, type} = notification
+  return (
+    <div className={`${type}`}>
+      {message}
+    </div>
+  )
+}
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setNewFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     bookService
       .getAll()
       .then(initialPersons => setPersons(initialPersons))
-  }, [persons])
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -27,6 +42,10 @@ const App = () => {
             .update(person.id, changedPerson)
             .then(returnedPerson => {
               setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+            setNotification({message: `Successfully updated ${person.name}.`, type: 'success'})
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
             })
         }
     }
@@ -38,13 +57,17 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setNotification({message: `Successfully added ${personObject.name}.`, type: 'success'})
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         })
     }
   }
 
   const deletePerson = (event) => {
-    const id = event.target.id
-    const name = persons.find(p => p.id == id).name
+    const id = parseInt(event.target.id)
+    const name = persons.find(p => p.id === id).name
     if (window.confirm(`Delete ${name}?`)) {
       bookService
       .remove(id)
@@ -61,6 +84,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
       <Filter value={filterName} handle={handleFilterChange} />
       <h2>Add new contact</h2>
       <PersonForm 
