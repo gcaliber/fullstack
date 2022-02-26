@@ -1,23 +1,9 @@
-import './App.css'
-
 import { useEffect, useState } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import bookService from './services/phonebook'
-
-const Notification = ({notification}) => {
-  if (notification === null) {
-    return null
-  }
-
-  const {message, type} = notification
-  return (
-    <div className={`${type}`}>
-      {message}
-    </div>
-  )
-}
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -46,6 +32,12 @@ const App = () => {
             setTimeout(() => {
               setNotification(null)
             }, 5000)
+            })
+            .catch(error => {
+              setNotification({message: `Unable to update ${person.name}, name not found.`, type: 'error'})
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)
             })
         }
     }
